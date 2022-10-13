@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import { useRef } from "react";
 import styled from "styled-components";
 
@@ -24,7 +24,7 @@ const SingleItemBox = styled(motion.div)`
   overflow: hidden;
 `;
 
-const BoxWrapper = styled.div`
+const BoxWrapper = styled(motion.div)`
   width: 100vw;
   height: 50vh;
   display: flex;
@@ -42,7 +42,7 @@ const Circle = styled(motion.div)`
 `;
 
 const Wrapper = styled(motion.div)`
-  height: 100vh;
+  height: 120vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -105,10 +105,12 @@ function App() {
     [-1400, -650, 150],
     [startColor, midColor, endColor]
   );
+  const { scrollYProgress } = useScroll();
+  const scrollYScale = useTransform(scrollYProgress, [0, 1], [1, 2]);
 
   return (
     <Wrapper style={{ background: bgGradient }}>
-      <BoxWrapper>
+      <BoxWrapper style={{ scale: scrollYScale }}>
         <Box
           style={{ backgroundColor: "white" }}
           variants={myVariants}
