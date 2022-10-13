@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useRef } from "react";
 import styled from "styled-components";
 
@@ -94,6 +94,9 @@ const dragVariant = {
 
 function App() {
   const biggerBoxRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const rotateZ = useTransform(x, [-1400, 150], [-360, 360]);
+
   return (
     <Wrapper>
       <BoxWrapper>
@@ -128,6 +131,12 @@ function App() {
             whileDrag="drag"
           />
         </SingleItemBox>
+        <button onClick={() => x.set(-650)}>To Center</button>
+        <Box
+          style={{ x, rotateZ, backgroundColor: "white" }}
+          drag={"x"}
+          dragSnapToOrigin
+        />
       </BoxWrapper>
     </Wrapper>
   );
