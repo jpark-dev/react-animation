@@ -41,7 +41,7 @@ const Circle = styled(motion.div)`
   border-radius: 40px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -92,13 +92,22 @@ const dragVariant = {
   drag: { backgroundColor: "rgb(50, 50, 75)", transition: { duration: 3 } },
 };
 
+const startColor = "linear-gradient(135deg,#f2314e,#ea7024)";
+const midColor = "linear-gradient(135deg,#cdba2c,#14b711)";
+const endColor = "linear-gradient(135deg,#337bd4,#450a79)";
+
 function App() {
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const rotateZ = useTransform(x, [-1400, 150], [-360, 360]);
+  const bgGradient = useTransform(
+    x,
+    [-1400, -650, 150],
+    [startColor, midColor, endColor]
+  );
 
   return (
-    <Wrapper>
+    <Wrapper style={{ background: bgGradient }}>
       <BoxWrapper>
         <Box
           style={{ backgroundColor: "white" }}
