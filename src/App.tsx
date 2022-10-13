@@ -12,6 +12,14 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
+const BoxWrapper = styled.div`
+  width: 100vw;
+  height: 50vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
 const Circle = styled(motion.div)`
   background-color: white;
   place-self: center;
@@ -65,12 +73,20 @@ const circleVariant = {
 function App() {
   return (
     <Wrapper>
-      <Box variants={appearBoxVariant} initial="start" animate="end">
-        <Circle variants={circleVariant} />
-        <Circle variants={circleVariant} />
-        <Circle variants={circleVariant} />
-        <Circle variants={circleVariant} />
-      </Box>
+      <BoxWrapper>
+        <Box
+          style={{ backgroundColor: "white" }}
+          variants={myVariants}
+          initial="start"
+          animate="end"
+        />
+        <Box variants={appearBoxVariant} initial="start" animate="end">
+          <Circle variants={circleVariant} />
+          <Circle variants={circleVariant} />
+          <Circle variants={circleVariant} />
+          <Circle variants={circleVariant} />
+        </Box>
+      </BoxWrapper>
     </Wrapper>
   );
 }
