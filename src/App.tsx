@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import styled from "styled-components";
 
 const Box = styled(motion.div)`
@@ -8,8 +9,19 @@ const Box = styled(motion.div)`
   grid-template-columns: repeat(2, 1fr);
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 50px;
-  trans
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+
+const SingleItemBox = styled(motion.div)`
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 `;
 
 const BoxWrapper = styled.div`
@@ -70,7 +82,18 @@ const circleVariant = {
   },
 };
 
+const gestureVariant = {
+  hover: { scale: 1.5, rotateZ: 180 },
+  click: { scale: 1, borderRadius: "100px" },
+};
+
+const dragVariant = {
+  ...gestureVariant,
+  drag: { backgroundColor: "rgb(50, 50, 75)", transition: { duration: 3 } },
+};
+
 function App() {
+  const biggerBoxRef = useRef<HTMLDivElement>(null);
   return (
     <Wrapper>
       <BoxWrapper>
@@ -86,6 +109,25 @@ function App() {
           <Circle variants={circleVariant} />
           <Circle variants={circleVariant} />
         </Box>
+        <Box
+          style={{ backgroundColor: "white" }}
+          variants={gestureVariant}
+          whileHover="hover"
+          whileTap="click"
+        />
+        <SingleItemBox ref={biggerBoxRef}>
+          <Circle
+            drag
+            dragSnapToOrigin
+            dragElastic={0.3}
+            dragConstraints={biggerBoxRef}
+            style={{ borderRadius: "20px" }}
+            variants={dragVariant}
+            whileHover="hover"
+            whileTap="click"
+            whileDrag="drag"
+          />
+        </SingleItemBox>
       </BoxWrapper>
     </Wrapper>
   );
