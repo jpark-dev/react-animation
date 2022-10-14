@@ -18,6 +18,33 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
+const GridLayout = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 50vw;
+  gap: 10px;
+  div:first-child,
+  div:last-child {
+    grid-column: span 2;
+  }
+`;
+
+const GridLayoutBox = styled(motion.div)`
+  border-radius: 40px;
+  height: 200px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 1);
+`;
+
+const Overlay = styled(motion.div)`
+  width: 100%;
+  height: 300vh;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const SingleItemBox = styled(motion.div)`
   width: 200px;
   height: 200px;
@@ -75,7 +102,7 @@ const Svg = styled.svg`
 `;
 
 const Wrapper = styled(motion.div)`
-  height: 150vh;
+  height: 300vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -164,6 +191,7 @@ function App() {
   const [visible, setVisible] = useState(1);
   const [toRight, setToRight] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [layoutClicked, setLayoutClicked] = useState(false);
 
   const incrementVisible = () => {
     setToRight(false);
@@ -175,6 +203,7 @@ function App() {
   };
   const toggleShowing = () => setShowing((prev) => !prev);
   const toggleClick = () => setClicked((prev) => !prev);
+  const toggleClickLayout = () => setLayoutClicked((prev) => !prev);
 
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -276,13 +305,34 @@ function App() {
       <button onClick={incrementVisible}>next</button>
       <BoxWrapper onClick={toggleClick}>
         <LayoutBox>
-          {!clicked ? <LayoutCircle layoutId="circle" style={{ borderRadius: 50 }}/> : null}
+          {!clicked ? (
+            <LayoutCircle layoutId="circle" style={{ borderRadius: 50 }} />
+          ) : null}
         </LayoutBox>
         <LayoutBox>
           {clicked ? (
             <LayoutCircle layoutId="circle" style={{ borderRadius: 0 }} />
           ) : null}
         </LayoutBox>
+      </BoxWrapper>
+      <BoxWrapper onClick={toggleClickLayout}>
+        <GridLayout>
+          <GridLayoutBox layoutId="topLeft"/>
+          <GridLayoutBox layoutId=""/>
+          <GridLayoutBox layoutId=""/>
+          <GridLayoutBox layoutId=""/>
+        </GridLayout>
+        <AnimatePresence>
+          {layoutClicked ? (
+            <Overlay
+              initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
+              animate={{ opacity: 1, backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+              exit={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
+            >
+              <GridLayoutBox layoutId="topLeft" style={{ width: 400, height: 200}}/>
+            </Overlay>
+          ) : null}
+        </AnimatePresence>
       </BoxWrapper>
     </Wrapper>
   );
