@@ -122,9 +122,18 @@ const toggleVariant = {
 };
 
 const sliderVariant = {
-  invisible: { x: 500, opacity: 0, scale: 0 },
-  visible: { x: 0, opacity: 1, scale: 1, transition: { duration: 1 } },
-  exit: { x: -500, opacity: 0, scale: 0, transition: { duration: 2 } },
+  entry: (toRight: boolean) => ({
+    x: toRight ? -500 : 500,
+    opacity: 0,
+    scale: 0,
+  }),
+  center: { x: 0, opacity: 1, scale: 1, transition: { duration: 0.2 } },
+  exit: (toRight: boolean) => ({
+    x: toRight ? 500 : -500,
+    opacity: 0,
+    scale: 0,
+    transition: { duration: 0.2 },
+  }),
 };
 
 const startColor = "linear-gradient(135deg,#f2314e,#ea7024)";
@@ -134,9 +143,16 @@ const endColor = "linear-gradient(135deg,#337bd4,#450a79)";
 function App() {
   const [showing, setShowing] = useState(false);
   const [visible, setVisible] = useState(1);
+  const [toRight, setToRight] = useState(false);
 
-  const incrementVisible = () =>
+  const incrementVisible = () => {
+    setToRight(false);
     setVisible((prev) => (prev === 10 ? 10 : prev + 1));
+  };
+  const decrementVisible = () => {
+    setToRight(true);
+    setVisible((prev) => (prev === 1 ? 1 : prev - 1));
+  };
   const toggleShowing = () => setShowing((prev) => !prev);
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -220,23 +236,21 @@ function App() {
         </AnimatePresence>
       </BoxWrapper>
       <BoxWrapper>
-        <AnimatePresence>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-            i === visible ? (
-              <SingleItemBox
-                style={{ position: "absolute" }}
-                variants={sliderVariant}
-                initial="invisible"
-                animate="visible"
-                exit="exit"
-                key={i}
-              >
-                {i}
-              </SingleItemBox>
-            ) : null
-          )}
+        <AnimatePresence exitBeforeEnter custom={toRight}>
+          <SingleItemBox
+            style={{ position: "absolute" }}
+            custom={toRight}
+            variants={sliderVariant}
+            initial="entry"
+            animate="center"
+            exit="exit"
+            key={visible}
+          >
+            {visible}
+          </SingleItemBox>
         </AnimatePresence>
       </BoxWrapper>
+      <button onClick={decrementVisible}>previous</button>
       <button onClick={incrementVisible}>next</button>
     </Wrapper>
   );
