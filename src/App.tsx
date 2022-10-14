@@ -191,7 +191,7 @@ function App() {
   const [visible, setVisible] = useState(1);
   const [toRight, setToRight] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [layoutClicked, setLayoutClicked] = useState(false);
+  const [clickedId, setClickedId] = useState<string | null>(null);
 
   const incrementVisible = () => {
     setToRight(false);
@@ -203,7 +203,6 @@ function App() {
   };
   const toggleShowing = () => setShowing((prev) => !prev);
   const toggleClick = () => setClicked((prev) => !prev);
-  const toggleClickLayout = () => setLayoutClicked((prev) => !prev);
 
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -315,21 +314,28 @@ function App() {
           ) : null}
         </LayoutBox>
       </BoxWrapper>
-      <BoxWrapper onClick={toggleClickLayout}>
+      <BoxWrapper>
         <GridLayout>
-          <GridLayoutBox layoutId="topLeft"/>
-          <GridLayoutBox layoutId=""/>
-          <GridLayoutBox layoutId=""/>
-          <GridLayoutBox layoutId=""/>
+          {["1", "2", "3", "4"].map((n) => (
+            <GridLayoutBox
+              key={n}
+              layoutId={n}
+              onClick={() => setClickedId(n)}
+            />
+          ))}
         </GridLayout>
         <AnimatePresence>
-          {layoutClicked ? (
+          {clickedId ? (
             <Overlay
+              onClick={() => setClickedId(null)}
               initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
               animate={{ opacity: 1, backgroundColor: "rgba(0, 0, 0, 0.5)" }}
               exit={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
             >
-              <GridLayoutBox layoutId="topLeft" style={{ width: 400, height: 200}}/>
+              <GridLayoutBox
+                layoutId={clickedId}
+                style={{ width: 400, height: 200 }}
+              />
             </Overlay>
           ) : null}
         </AnimatePresence>
