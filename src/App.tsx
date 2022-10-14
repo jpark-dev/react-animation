@@ -1,5 +1,11 @@
-import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
-import { useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useScroll,
+  AnimatePresence,
+} from "framer-motion";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
 const Box = styled(motion.div)`
@@ -108,11 +114,19 @@ const svgVariant = {
   },
 };
 
+const toggleVariant = {
+  initial: { opacity: 0, scale: 0 },
+  visible: { opacity: 1, scale: 1, rotateZ: 360 },
+  leaving: { opacity: 0, scale: 0, y: 20 },
+};
+
 const startColor = "linear-gradient(135deg,#f2314e,#ea7024)";
 const midColor = "linear-gradient(135deg,#cdba2c,#14b711)";
 const endColor = "linear-gradient(135deg,#337bd4,#450a79)";
 
 function App() {
+  const [showing, setShowing] = useState(false);
+  const toggleShowing = () => setShowing((prev) => !prev);
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const rotateZ = useTransform(x, [-1400, 150], [-360, 360]);
@@ -180,6 +194,17 @@ function App() {
             />
           </Svg>
         </SingleItemBox>
+        <button onClick={toggleShowing}>Toggle</button>
+        <AnimatePresence>
+          {showing ? (
+            <Box
+              variants={toggleVariant}
+              initial="initial"
+              animate="visible"
+              exit="leaving"
+            />
+          ) : null}
+        </AnimatePresence>
       </BoxWrapper>
     </Wrapper>
   );
