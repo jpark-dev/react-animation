@@ -47,6 +47,25 @@ const Circle = styled(motion.div)`
   border-radius: 40px;
 `;
 
+const LayoutBox = styled(motion.div)`
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+
+const LayoutCircle = styled(motion.div)`
+  background-color: #00a4ff;
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+
 const Svg = styled.svg`
   padding: 25px;
   path {
@@ -56,7 +75,7 @@ const Svg = styled.svg`
 `;
 
 const Wrapper = styled(motion.div)`
-  height: 120vh;
+  height: 150vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -144,6 +163,7 @@ function App() {
   const [showing, setShowing] = useState(false);
   const [visible, setVisible] = useState(1);
   const [toRight, setToRight] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const incrementVisible = () => {
     setToRight(false);
@@ -154,6 +174,8 @@ function App() {
     setVisible((prev) => (prev === 1 ? 1 : prev - 1));
   };
   const toggleShowing = () => setShowing((prev) => !prev);
+  const toggleClick = () => setClicked((prev) => !prev);
+
   const biggerBoxRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const rotateZ = useTransform(x, [-1400, 150], [-360, 360]);
@@ -252,6 +274,16 @@ function App() {
       </BoxWrapper>
       <button onClick={decrementVisible}>previous</button>
       <button onClick={incrementVisible}>next</button>
+      <BoxWrapper onClick={toggleClick}>
+        <LayoutBox>
+          {!clicked ? <LayoutCircle layoutId="circle" style={{ borderRadius: 50 }}/> : null}
+        </LayoutBox>
+        <LayoutBox>
+          {clicked ? (
+            <LayoutCircle layoutId="circle" style={{ borderRadius: 0 }} />
+          ) : null}
+        </LayoutBox>
+      </BoxWrapper>
     </Wrapper>
   );
 }
